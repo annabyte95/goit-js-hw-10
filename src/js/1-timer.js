@@ -12,6 +12,9 @@ const daysEl = document.querySelector("[data-days]");
 const hoursEl = document.querySelector("[data-hours]");
 const minutesEl = document.querySelector("[data-minutes]");
 const secondsEl = document.querySelector("[data-seconds]");
+const input = document.querySelector("#datetime-picker");
+
+startBtn.disabled = true;
 
 const options = {
   enableTime: true,
@@ -21,7 +24,7 @@ const options = {
   onClose(selectedDates) {
     userSelectedDate = selectedDates[0];
 
-    if (userSelectedDate < new Date()) {
+    if (userSelectedDate <= new Date()) {
         startBtn.disabled = true;
         
         iziToast.error({
@@ -37,6 +40,7 @@ const picker = flatpickr("#datetime-picker", options);
 
 startBtn.addEventListener("click", () => {
     startBtn.disabled = true;
+    input.disabled = true;
     picker.set("clickOpens", false);
 
     const timeId = setInterval(() => {
@@ -44,10 +48,15 @@ startBtn.addEventListener("click", () => {
 
     if (timeLeft <= 0) {
     clearInterval(timeId);
+
     daysEl.textContent = "00";
     hoursEl.textContent = "00";
     minutesEl.textContent = "00";
     secondsEl.textContent = "00";
+
+    input.disabled = false;
+    picker.set('clickOpens', true);
+    startBtn.disabled = true;
 
     return;
 }
